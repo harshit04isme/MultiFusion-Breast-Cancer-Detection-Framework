@@ -1,0 +1,9 @@
+streamlit
+huggingface_hub
+torch
+torchvision
+timm
+Pillow
+numpy
+opencv-python-headless
+streamlit-option-menu
