@@ -1,436 +1,272 @@
-# 🩺 MultiFusion Breast Cancer Detection Framework
+# MultiFusion Breast Cancer Detection Framework
 
-<div align="center">
+An AI-based breast cancer image classification framework built with deep learning, Swin Transformer feature extraction, and an interactive Streamlit application.
 
-**A Deep Learning Framework for Breast Cancer Image Classification Across Multiple Imaging Modalities**
+> Disclaimer: This project is created for educational, research, and demonstration purposes only. It is not a clinical diagnostic tool and must not be used as a replacement for professional medical advice, screening, or diagnosis.
 
-</div>
+## Table of Contents
 
----
+- [Project Overview](#project-overview)
+- [Application Pages](#application-pages)
+- [Key Features](#key-features)
+- [Supported Datasets](#supported-datasets)
+- [Methodology](#methodology)
+- [Model Workflow](#model-workflow)
+- [Results](#results)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Hugging Face Model Access](#hugging-face-model-access)
+- [Run the Application](#run-the-application)
+- [Deployment Notes](#deployment-notes)
+- [Limitations](#limitations)
+- [Future Scope](#future-scope)
+- [Author](#author)
+- [License](#license)
 
-## 📋 Table of Contents
+## Project Overview
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Datasets](#-datasets)
-- [Methodology](#-methodology)
-- [Experimental Results](#-experimental-results)
-- [Application](#️-application)
-- [Model Security & Deployment](#-model-security--deployment)
-- [Project Structure](#-project-structure)
-- [Quick Start](#-quick-start)
-- [Live Deployment](#-live-deployment)
-- [Limitations](#️-limitations)
-- [Future Work](#-future-work)
-- [Research](#-research)
-- [Author](#️-author)
-- [License](#-license)
+MultiFusion Breast Cancer Detection Framework is a deep learning project designed to classify breast cancer medical images across different imaging modalities. The project focuses on using AI-assisted image analysis to support research into early breast cancer detection.
 
----
+The current application provides two prediction modules:
 
-## 📖 Overview
+- BreakHis Prediction for histopathology images
+- BUSI Prediction for breast ultrasound images
 
-**MultiFusion Breast Cancer Detection Framework** is a deep learning-based framework for automated breast cancer image classification across multiple medical imaging modalities.
+The app allows users to upload an image, run inference through a trained model, and view the predicted class with confidence scores and probability distribution.
 
-The framework combines **Self-Supervised Learning (SSL)** using **SimCLR** with **Swin Transformer-based feature learning** to explore robust visual representation learning in scenarios where large-scale annotated medical imaging data can be difficult and expensive to obtain.
+## Application Pages
 
-The framework is evaluated across three diverse breast cancer imaging datasets:
+The Streamlit interface is organized into three main pages:
 
-- **BUSI** — Breast Ultrasound Images
-- **BreakHis** — Breast Histopathology Images
-- **INbreast** — Digital Mammography
+| Page | Purpose |
+|---|---|
+| Home | Provides an overview of the system, breast cancer awareness information, and dataset details |
+| BreakHis Prediction | Accepts histopathology images and predicts Benign or Malignant |
+| BUSI Prediction | Accepts ultrasound images and predicts Benign, Malignant, or Normal |
 
-By evaluating the framework across different imaging modalities, the project investigates the robustness and generalization of deep learning-based breast cancer classification beyond a single dataset or imaging modality.
+## Key Features
 
-> ⚠️ **Disclaimer:** This project is intended for educational and research purposes only. It is not a medical diagnostic system and should not be used for clinical decision-making.
+- Interactive Streamlit web interface
+- Image upload support for PNG, JPG, and JPEG files
+- Breast cancer classification for histopathology and ultrasound images
+- Swin Transformer-based deep learning architecture
+- Image preprocessing using CLAHE for BreakHis inference
+- Confidence score and class-wise probability output
+- Private model weight loading from Hugging Face
+- Streamlit Secrets support for secure token management
+- Lightweight public repository suitable for deployment
 
----
+## Supported Datasets
 
-## ✨ Key Features
+### BreakHis
 
-- 🧠 **Self-Supervised Learning** using SimCLR
-- 🔬 **Swin Transformer-based visual feature learning**
-- 🩻 Support for multiple breast imaging modalities
-- 📊 Evaluation across BUSI, BreakHis, and INbreast
-- 🔄 Focus on cross-dataset generalization
-- 🖥️ Interactive Streamlit-based application
-- 🔐 Private model-weight hosting using Hugging Face
-- ⚡ Deep learning-based image inference
-- 🌐 Deployment through Streamlit Community Cloud
+BreakHis is a breast cancer histopathological image dataset used for microscopic tissue image classification.
 
----
+| Detail | Value |
+|---|---|
+| Modality | Histopathology |
+| Classes | Benign, Malignant |
+| Application Page | BreakHis Prediction |
 
-## 🗂️ Datasets
+### BUSI
 
-The framework was evaluated using three publicly available breast cancer imaging datasets representing different medical imaging modalities.
+BUSI is a breast ultrasound image dataset used for breast lesion classification.
 
-### 🩻 BUSI
+| Detail | Value |
+|---|---|
+| Modality | Ultrasound |
+| Classes | Benign, Malignant, Normal |
+| Application Page | BUSI Prediction |
 
-**Breast Ultrasound Images Dataset**
+## Methodology
 
-- **Modality:** Ultrasound
-- **Classes:** Benign, Malignant, Normal
-- **Task:** Breast lesion classification
+The framework uses deep learning for medical image classification. The application loads trained model weights and performs inference on uploaded images using a Swin Transformer backbone.
 
-### 🔬 BreakHis
+High-level methodology:
 
-**Breast Cancer Histopathological Image Dataset**
+1. User uploads a breast cancer image.
+2. The image is converted to RGB format.
+3. The image is resized to 224 x 224 pixels.
+4. Standard ImageNet normalization is applied.
+5. The selected trained model performs inference.
+6. Softmax probabilities are calculated.
+7. The predicted class, confidence score, and probability distribution are displayed.
 
-- **Modality:** Histopathology
-- **Classes:** Benign, Malignant
-- **Task:** Breast cancer classification from histopathological images
+For BreakHis images, CLAHE preprocessing is applied before prediction to enhance image contrast.
 
-### 🩺 INbreast
-
-**INbreast Digital Mammography Dataset**
-
-- **Modality:** Mammography
-- **Task:** Breast cancer-related image analysis
-
-The use of multiple datasets enables evaluation across substantially different imaging modalities and helps investigate the generalization of the proposed learning approach.
-
----
-
-## 🧠 Methodology
-
-The framework combines self-supervised representation learning with transformer-based visual feature extraction.
-
-### 1. Self-Supervised Representation Learning
-
-**SimCLR-based self-supervised learning** is used to learn meaningful visual representations from medical images without relying exclusively on manually annotated data during representation learning.
-
-This approach aims to reduce dependence on large-scale annotated datasets and learn useful visual characteristics for downstream classification.
-
-### 2. Transformer-Based Feature Learning
-
-**Swin Transformer** is used for hierarchical visual feature extraction, enabling the framework to capture both local and broader spatial characteristics present in breast medical images.
-
-### 3. Dataset-Specific Classification
-
-The learned visual representations are used for downstream classification across the supported breast imaging datasets.
-
-### High-Level Pipeline
+## Model Workflow
 
 ```text
-Medical Images
-       │
-       ▼
-Self-Supervised Representation Learning
-       │
-       ▼
-Learned Visual Representations
-       │
-       ▼
-Swin Transformer-based Feature Learning
-       │
-       ▼
-Dataset-Specific Classification
-       │
-       ▼
-Prediction
+Uploaded Medical Image
+        |
+        v
+Image Preprocessing
+        |
+        v
+Swin Transformer Encoder
+        |
+        v
+Classification Head
+        |
+        v
+Softmax Probability Scores
+        |
+        v
+Predicted Class + Confidence
 ```
 
-> **Research Note:** Detailed architectural configurations, training strategies, hyperparameters, ablation studies, and other research-specific implementation details are intentionally not documented in this repository.
+## Results
 
----
+The framework has been evaluated on breast cancer image classification datasets with the following reported performance:
 
-## 📊 Experimental Results
-
-The framework achieved the following classification accuracy on the evaluated datasets:
-
-| Dataset | Imaging Modality | Accuracy |
+| Dataset | Imaging Modality | Reported Accuracy |
 |---|---|---:|
-| **BreakHis** | Histopathology | **98.04%** |
-| **BUSI** | Ultrasound | **96.87%** |
+| BreakHis | Histopathology | 98.04% |
+| BUSI | Ultrasound | 96.87% |
 
+These results are based on the project evaluation setup and should be interpreted as research results, not clinical validation.
 
-These results demonstrate strong classification performance across three heterogeneous breast imaging datasets and provide an initial evaluation of the framework across different imaging modalities.
+## Technology Stack
 
-> **Note:** Reported results correspond to the experimental setup used during project evaluation. Further validation on independent clinical datasets would be required before considering clinical applications.
+- Python
+- Streamlit
+- PyTorch
+- Torchvision
+- timm
+- Hugging Face Hub
+- OpenCV
+- Pillow
+- NumPy
+- streamlit-option-menu
 
----
-
-## 🖥️ Application
-
-The project provides an interactive **Streamlit** interface for demonstrating breast cancer image classification.
-
-### 🏠 Home
-
-The application provides:
-
-- Project overview
-- Framework information
-- Dataset information
-- Navigation to prediction modules
-- Research and usage information
-
-### 🔬 BreakHis Prediction
-
-Users can:
-
-- Upload a histopathology image
-- Process the image using the trained model
-- Obtain the predicted class
-- View prediction confidence
-
-**Supported classes:**
-
-```text
-Benign
-Malignant
-```
-
-### 🩻 BUSI Prediction
-
-Users can:
-
-- Upload a breast ultrasound image
-- Process the image using the trained model
-- Obtain the predicted class
-- View prediction confidence
-
-**Supported classes:**
-
-```text
-Benign
-Malignant
-Normal
-```
-
----
-
-## 🔐 Model Security & Deployment
-
-To keep trained model artifacts separate from the public application repository:
-
-- ✅ Model weights are **not stored on GitHub**
-- ✅ Trained model weights are hosted in a **private Hugging Face repository**
-- ✅ Model access is controlled using a Hugging Face access token
-- ✅ Credentials are managed through **Streamlit Secrets**
-- ✅ Dataset files are excluded from the public repository
-- ✅ Training notebooks and experimental files remain private
-- ✅ The public repository contains the application and deployment code
-
-The application downloads the required model weights from the private Hugging Face repository during runtime.
-
-### Deployment Architecture
-
-```text
-                 Public GitHub
-                      │
-                      ▼
-              Streamlit Application
-                      │
-                      │ HF Authentication
-                      ▼
-              Private Hugging Face
-                      │
-             ┌────────┴────────┐
-             ▼                 ▼
-      BreakHis Model      BUSI Model
-             │                 │
-             └────────┬────────┘
-                      ▼
-                  Inference
-                      │
-                      ▼
-                  Prediction
-```
-
-> 🔒 Model weights are intentionally excluded from this repository.
-
----
-
-## 📁 Project Structure
-
-The public repository contains only the files required to run and deploy the application:
+## Project Structure
 
 ```text
 MultiFusion-Breast-Cancer-Detection-Framework/
-│
-├── app.py                 # Main Streamlit application
-├── requirements.txt       # Deployment dependencies
-├── README.md              # Project documentation
-└── .gitignore             # Excluded files and directories
+|
+├── app.py              # Main Streamlit application
+├── requirements.txt    # Python dependencies
+├── README.md           # Project documentation
+└── .gitignore          # Ignored local/private files
 ```
 
-Private/local development resources include:
+Private or local-only resources are excluded from the public repository:
 
 ```text
 Dataset/
 Models/
 Notebooks/
 .streamlit/secrets.toml
-requirements-local.txt
 ```
 
-These resources are intentionally excluded from the public repository.
+## Installation
 
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.10+
-- pip
-- Git
-- Hugging Face account with access to the private model repository
-
-### Installation
-
-#### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Varundube99/MultiFusion-Breast-Cancer-Detection-Framework.git
+git clone https://github.com/harshit04isme/MultiFusion-Breast-Cancer-Detection-Framework.git
 cd MultiFusion-Breast-Cancer-Detection-Framework
 ```
 
-#### 2. Create a virtual environment
+### 2. Create a Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-**Windows:**
+### 3. Activate the Virtual Environment
 
-```bash
-venv\Scriptsctivate
-```
-
-**macOS/Linux:**
+For macOS or Linux:
 
 ```bash
 source venv/bin/activate
 ```
 
-#### 3. Install dependencies
+For Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+### 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. Configure Hugging Face access
+## Hugging Face Model Access
 
-Create:
+The trained model weights are not stored directly in this repository. The application downloads them from a Hugging Face repository at runtime.
+
+The app expects a Hugging Face token named `HF_TOKEN` in Streamlit Secrets.
+
+Create this file locally:
 
 ```text
 .streamlit/secrets.toml
 ```
 
-Add your Hugging Face read token:
+Add your token:
 
 ```toml
 HF_TOKEN = "your_hugging_face_read_token"
 ```
 
-> ⚠️ Never commit `secrets.toml` or expose your Hugging Face access token publicly.
+Never commit `.streamlit/secrets.toml` or expose your Hugging Face token publicly.
 
-#### 5. Run the application
+## Run the Application
+
+Start the Streamlit app:
 
 ```bash
 streamlit run app.py
 ```
 
-The application will be available at:
+Then open:
 
 ```text
 http://localhost:8501
 ```
 
----
+## Deployment Notes
 
-## 🌐 Live Deployment
+This project is suitable for deployment on Streamlit Community Cloud or similar Python app hosting platforms.
 
-The application is deployed using **Streamlit Community Cloud**.
+For deployment:
 
-### 🔗 Live Demo
+- Add all dependencies to `requirements.txt`.
+- Store `HF_TOKEN` securely in the hosting platform's secrets manager.
+- Keep model weights, datasets, notebooks, and local experiments outside the public repository.
+- Ensure the Hugging Face repository has the required model files:
+  - `breakhis_model.pth`
+  - `busi_model.pth`
 
-[MultiFusion Breast Cancer Detection Framework](https://multifusion-breast-cancer-detection-framework.streamlit.app/)
+## Limitations
 
-The deployed application retrieves the required private model weights using securely configured Streamlit Secrets.
+- This project is for research and educational use only.
+- It is not approved or validated for clinical diagnosis.
+- Model performance may vary on images from different devices, hospitals, populations, or acquisition settings.
+- The current app supports only BreakHis and BUSI prediction workflows.
+- External clinical validation is required before any real-world medical use.
 
-> The live application is intended for demonstration and research purposes only.
+## Future Scope
 
----
+- Add explainable AI visualizations such as Grad-CAM.
+- Add support for more imaging modalities.
+- Improve cross-dataset generalization.
+- Add model calibration and uncertainty estimation.
+- Include validation reports and confusion matrices.
+- Improve deployment monitoring and inference logging.
+- Optimize inference speed for low-resource environments.
 
-## ⚠️ Limitations
+## Author
 
-- The framework is intended for research and educational purposes.
-- Dataset performance does not necessarily represent performance in real-world clinical environments.
-- Medical imaging datasets may differ in acquisition protocols, equipment, demographics, and image characteristics.
-- Further validation on independent and clinically representative datasets is required.
-- Model predictions should not be interpreted as medical diagnoses.
-- The current application focuses on image-based classification rather than complete clinical decision support.
-- Performance may vary on images that differ substantially from the training and evaluation datasets.
+**Harshit Yadav**
 
----
+- Email: [hy.harshiyadav01@gmail.com](mailto:hy.harshiyadav01@gmail.com)
+- GitHub: [harshit04isme](https://github.com/harshit04isme)
 
-## 🚀 Future Work
+## License
 
-Potential future directions include:
-
-- [ ] Extensive cross-dataset validation
-- [ ] Evaluation on larger and more diverse datasets
-- [ ] Improved domain adaptation across imaging modalities
-- [ ] Explainable AI for model predictions
-- [ ] Uncertainty estimation and model calibration
-- [ ] Additional self-supervised learning strategies
-- [ ] External validation using independent clinical datasets
-- [ ] Multimodal breast cancer analysis
-- [ ] Real-time inference optimization
-- [ ] Integration of additional medical imaging datasets
-
----
-
-## 📚 Research
-
-**MultiFusion Breast Cancer Detection Framework** is being developed as part of ongoing research into **self-supervised learning, transformer-based computer vision, and medical image analysis**.
-
-The project investigates self-supervised representation learning and transformer-based feature extraction for breast cancer image classification across multiple imaging modalities.
-
-Detailed research components, including:
-
-- Architectural design choices
-- Training methodology
-- Ablation studies
-- Detailed experimental analysis
-- Comparative experiments
-- Implementation-specific configurations
-
-are being reserved for the associated research work.
-
----
-
-## 👨‍💻 Author
-
-**Varun Dubey**
-
-🎓 B.Tech Computer Science Engineering  
-🤖 AI / ML & Deep Learning  
-🔬 Research Enthusiast
-
-### GitHub
-**[@Varundube99](https://github.com/Varundube99)**
-
-### Mail
-📧 **Email:** varundube99@gmail.com
-
----
-
-## 📜 License
-
-This project is intended for **educational and research purposes**.
-
-- Application code is available through this repository.
-- Trained model weights are intentionally excluded from the public repository.
-- Dataset ownership and licensing remain with the respective dataset providers.
-- Users are responsible for complying with the licenses and terms associated with the datasets used by the project.
-
----
-
-<div align="center">
-
-⭐ **If you find this project interesting, consider starring the repository!** ⭐
-
-</div>
+This project is intended for educational and research purposes. Dataset ownership and licensing remain with their respective providers. Users are responsible for following all dataset, model, and dependency license terms.
