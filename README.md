@@ -264,7 +264,7 @@ For deployment:
 
 **Harshit Yadav**
 
-- Email: [hy.harshiyadav01@gmail.com](mailto:hy.harshiyadav01@gmail.com)
+- Email: [hy.harshityadav01@gmail.com](mailto:hy.harshityadav01@gmail.com)
 - GitHub: [harshit04isme](https://github.com/harshit04isme)
 
 ## License
